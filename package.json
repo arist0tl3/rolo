@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "deploy-client": "cd client && vercel deploy --prod && cd ..",
+    "deploy-server": "git push heroku `git subtree split --prefix server master`:master --force"
+  }
+}

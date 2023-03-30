@@ -1,0 +1,5 @@
+{
+  "events": {
+    "restart": "sleep 3 && npm --prefix ../client/ run generate"
+  }
+}
