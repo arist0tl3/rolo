@@ -15,6 +15,7 @@ import Header from 'Header';
 import HeaderTitle from 'HeaderTitle';
 import InputWrapper from 'InputWrapper';
 import PlacesAutocomplete from 'PlacesAutocomplete';
+import UnstyledLink from 'UnstyledLink';
 
 const CreateContactButtons = styled.div`
   display: flex;
@@ -133,7 +134,9 @@ function CreateContact() {
   return (
     <>
       <Header>
-        <HeaderTitle>{'Rolo'}</HeaderTitle>
+        <UnstyledLink to={'/'}>
+          <HeaderTitle>{'Rolo'}</HeaderTitle>
+        </UnstyledLink>
         <CreateContactButtons>
           <CancelCreateContactButton onClick={handleCancelCreateContactButtonClick}>
             <MdClose />

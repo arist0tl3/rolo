@@ -8,13 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Contact, Place } from 'types';
 
-import { darkText, highlight, lightText, offWhite, secondary } from 'colors';
+import { darkText, destroy, highlight, lightText, offWhite, secondary } from 'colors';
 
 import Content from 'Content';
 import Header from 'Header';
 import HeaderTitle from 'HeaderTitle';
 import InputWrapper from 'InputWrapper';
 import PlacesAutocomplete from 'PlacesAutocomplete';
+import UnstyledLink from 'UnstyledLink';
 
 const EditContactButtons = styled.div`
   display: flex;
@@ -80,6 +81,23 @@ const ShiftButton = styled.button<ShiftButtonProps>`
   justify-content: center;
 `;
 
+const DeleteButtonWrapper = styled.div`
+  padding: 16px 16px 24px;
+`;
+
+const DeleteButton = styled.button`
+  width: 100%;
+  background: ${destroy};
+  color: ${lightText};
+  border: 0;
+  border-radius: 8px;
+  font-size: 16px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const times = ['Morning', 'Afternoon', 'Evening'];
 
@@ -135,10 +153,19 @@ function EditContact() {
     navigate('/');
   };
 
+  const handleDeleteButtonClick = async () => {
+    await setContacts([...contacts.filter((c) => c._id !== contactId)]);
+
+    resetContactState();
+    navigate('/');
+  };
+
   return (
     <>
       <Header>
-        <HeaderTitle>{'Rolo'}</HeaderTitle>
+        <UnstyledLink to={'/'}>
+          <HeaderTitle>{'Rolo'}</HeaderTitle>
+        </UnstyledLink>
         <EditContactButtons>
           <CancelEditContactButton onClick={handleCancelEditContactButtonClick}>
             <MdClose />
@@ -150,7 +177,7 @@ function EditContact() {
       </Header>
       <Content>
         <Form autoComplete={'off'} onSubmit={handleEditContactFormSubmit}>
-          <h3>{'Add a friend'}</h3>
+          <h3>{'Update a friend'}</h3>
 
           <h4>{'Basics'}</h4>
           <InputWrapper>
@@ -185,6 +212,10 @@ function EditContact() {
             <textarea onChange={(e) => setNotes(e.currentTarget.value)} value={notes} />
           </InputWrapper>
         </Form>
+
+        <DeleteButtonWrapper>
+          <DeleteButton onClick={handleDeleteButtonClick}>{'Remove this contact'}</DeleteButton>
+        </DeleteButtonWrapper>
       </Content>
     </>
   );

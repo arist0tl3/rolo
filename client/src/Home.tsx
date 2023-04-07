@@ -40,14 +40,30 @@ const ContactName = styled.div`
 
 const ContactLocation = styled.div``;
 
+const WelcomeWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  font-size: 24px;
+`;
+
 function Home() {
   const [contacts] = useLocalStorage<Contact[]>('contacts', []);
   const sortedContacts = contacts.sort((a, b) => (a.firstName < b.firstName ? -1 : 1));
 
+  const showContacts = !!contacts?.length;
+  const showWelcome = !contacts?.length;
+
   return (
     <>
       <Header>
-        <HeaderTitle>{'Rolo'}</HeaderTitle>
+        <UnstyledLink to={'/'}>
+          <HeaderTitle>{'Rolo'}</HeaderTitle>
+        </UnstyledLink>
         <Link to={'/contacts/new'}>
           <CreateContactButton>
             <FaPencilAlt />
@@ -55,16 +71,24 @@ function Home() {
         </Link>
       </Header>
       <Content>
-        <ContactList>
-          {sortedContacts.map((contact) => (
-            <UnstyledLink key={contact._id} to={`/contacts/${contact._id}`}>
-              <ContactListItem>
-                <ContactName>{contact.firstName}</ContactName>
-                <ContactLocation>{contact?.place?.locationName}</ContactLocation>
-              </ContactListItem>
-            </UnstyledLink>
-          ))}
-        </ContactList>
+        {showWelcome && (
+          <WelcomeWrapper>
+            <div>{'Welcome to Rolo!'} </div>
+            <div>{'Use the pencil button to add your first contact.'}</div>
+          </WelcomeWrapper>
+        )}
+        {showContacts && (
+          <ContactList>
+            {sortedContacts.map((contact) => (
+              <UnstyledLink key={contact._id} to={`/contacts/${contact._id}`}>
+                <ContactListItem>
+                  <ContactName>{contact.firstName}</ContactName>
+                  <ContactLocation>{contact?.place?.locationName}</ContactLocation>
+                </ContactListItem>
+              </UnstyledLink>
+            ))}
+          </ContactList>
+        )}
       </Content>
     </>
   );
