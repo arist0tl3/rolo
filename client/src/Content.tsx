@@ -7,6 +7,7 @@ const Content = styled.div`
   height: calc(100% - 48px);
   background: ${secondary};
   color: ${darkText};
+  overflow-y: auto;
 `;
 
 export default Content;

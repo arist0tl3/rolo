@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useLocalStorage from 'use-local-storage';
 import { FaCheck } from 'react-icons/fa';
@@ -16,12 +16,12 @@ import HeaderTitle from 'HeaderTitle';
 import InputWrapper from 'InputWrapper';
 import PlacesAutocomplete from 'PlacesAutocomplete';
 
-const CreateContactButtons = styled.div`
+const EditContactButtons = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-const CancelCreateContactButton = styled.button`
+const CancelEditContactButton = styled.button`
   outline: 0;
   border: 0;
   background: ${secondary};
@@ -34,7 +34,7 @@ const CancelCreateContactButton = styled.button`
   }
 `;
 
-const CompleteCreateContactButton = styled.button`
+const CompleteEditContactButton = styled.button`
   outline: 0;
   border: 0;
   background: ${highlight};
@@ -83,17 +83,22 @@ const ShiftButton = styled.button<ShiftButtonProps>`
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const times = ['Morning', 'Afternoon', 'Evening'];
 
-function CreateContact() {
+function EditContact() {
   const navigate = useNavigate();
+  const params = useParams();
+
+  const { contactId = '' } = params;
 
   const [contacts, setContacts] = useLocalStorage<Contact[]>('contacts', []);
 
-  const [firstName, setFirstName] = useState<string>('');
-  const [shifts, setShifts] = useState<number[]>([]);
-  const [place, setPlace] = useState<Place>();
-  const [notes, setNotes] = useState<string>('');
+  const contact = contacts.find((c) => c._id === contactId);
 
-  const handleCreateContactFormSubmit = (e: FormEvent) => {
+  const [firstName, setFirstName] = useState<string>(contact?.firstName || '');
+  const [shifts, setShifts] = useState<number[]>(contact?.shifts || []);
+  const [place, setPlace] = useState<Place>();
+  const [notes, setNotes] = useState<string>(contact?.notes || '');
+
+  const handleEditContactFormSubmit = (e: FormEvent) => {
     e.preventDefault();
   };
 
@@ -108,21 +113,21 @@ function CreateContact() {
     setPlace(undefined);
   };
 
-  const handleCancelCreateContactButtonClick = () => {
+  const handleCancelEditContactButtonClick = () => {
     resetContactState();
 
     navigate('/');
   };
 
-  const handleCompleteCreateContactButtonClick = async () => {
+  const handleCompleteEditContactButtonClick = async () => {
     await setContacts([
-      ...contacts,
+      ...contacts.filter((c) => c._id !== contactId),
       {
         _id: uuidv4(),
         firstName,
         notes,
         shifts,
-        place,
+        place: contact?.place || place,
       },
     ]);
 
@@ -134,17 +139,17 @@ function CreateContact() {
     <>
       <Header>
         <HeaderTitle>{'Rolo'}</HeaderTitle>
-        <CreateContactButtons>
-          <CancelCreateContactButton onClick={handleCancelCreateContactButtonClick}>
+        <EditContactButtons>
+          <CancelEditContactButton onClick={handleCancelEditContactButtonClick}>
             <MdClose />
-          </CancelCreateContactButton>
-          <CompleteCreateContactButton onClick={handleCompleteCreateContactButtonClick}>
+          </CancelEditContactButton>
+          <CompleteEditContactButton onClick={handleCompleteEditContactButtonClick}>
             <FaCheck />
-          </CompleteCreateContactButton>
-        </CreateContactButtons>
+          </CompleteEditContactButton>
+        </EditContactButtons>
       </Header>
       <Content>
-        <Form autoComplete={'off'} onSubmit={handleCreateContactFormSubmit}>
+        <Form autoComplete={'off'} onSubmit={handleEditContactFormSubmit}>
           <h3>{'Add a friend'}</h3>
 
           <h4>{'Basics'}</h4>
@@ -153,7 +158,7 @@ function CreateContact() {
             <input id={'first-name'} type={'text'} onChange={(e) => setFirstName(e.currentTarget.value)} value={firstName} />
           </InputWrapper>
 
-          <PlacesAutocomplete onChange={(value) => setPlace(value)} />
+          <PlacesAutocomplete defaultValue={contact?.place?.locationName} onChange={(value) => setPlace(value)} />
 
           <h4>{'Shifts'}</h4>
           <InputWrapper>
@@ -185,4 +190,4 @@ function CreateContact() {
   );
 }
 
-export default CreateContact;
+export default EditContact;

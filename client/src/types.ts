@@ -11,6 +11,7 @@ export type Place = {
 export type Contact = {
   _id: string;
   firstName: string;
+  notes?: string;
   place?: Place;
   shifts?: number[];
 };

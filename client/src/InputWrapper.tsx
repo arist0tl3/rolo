@@ -12,7 +12,8 @@ const InputWrapper = styled.div`
     margin-bottom: 4px;
   }
 
-  input {
+  input,
+  textarea {
     background: ${offWhite};
     color: ${darkText};
     border-radius: 8px;

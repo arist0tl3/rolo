@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import CreateContact from 'CreateContact';
+import EditContact from 'EditContact';
 import Home from 'Home';
 import Layout from 'Layout';
 
@@ -19,8 +20,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/new',
+        path: '/contacts/new',
         element: <CreateContact />,
+      },
+      {
+        path: '/contacts/:contactId',
+        element: <EditContact />,
       },
     ],
   },

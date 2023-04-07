@@ -8,6 +8,7 @@ import { highlight, lightText, offWhite, secondary } from 'colors';
 import Content from 'Content';
 import Header from 'Header';
 import HeaderTitle from 'HeaderTitle';
+import UnstyledLink from 'UnstyledLink';
 
 import { Contact } from 'types';
 
@@ -40,13 +41,14 @@ const ContactName = styled.div`
 const ContactLocation = styled.div``;
 
 function Home() {
-  const [contacts] = useLocalStorage<any>('contacts', []);
+  const [contacts] = useLocalStorage<Contact[]>('contacts', []);
+  const sortedContacts = contacts.sort((a, b) => (a.firstName < b.firstName ? -1 : 1));
 
   return (
     <>
       <Header>
         <HeaderTitle>{'Rolo'}</HeaderTitle>
-        <Link to={'/new'}>
+        <Link to={'/contacts/new'}>
           <CreateContactButton>
             <FaPencilAlt />
           </CreateContactButton>
@@ -54,11 +56,13 @@ function Home() {
       </Header>
       <Content>
         <ContactList>
-          {contacts.map((contact: Contact) => (
-            <ContactListItem key={contact._id}>
-              <ContactName>{contact.firstName}</ContactName>
-              <ContactLocation>{contact?.place?.locationName}</ContactLocation>
-            </ContactListItem>
+          {sortedContacts.map((contact) => (
+            <UnstyledLink key={contact._id} to={`/contacts/${contact._id}`}>
+              <ContactListItem>
+                <ContactName>{contact.firstName}</ContactName>
+                <ContactLocation>{contact?.place?.locationName}</ContactLocation>
+              </ContactListItem>
+            </UnstyledLink>
           ))}
         </ContactList>
       </Content>
