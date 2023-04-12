@@ -9,6 +9,7 @@ import Layout from 'Layout';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const router = createBrowserRouter([
   {
@@ -42,3 +43,13 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+serviceWorkerRegistration.register();
+
+window.addEventListener('beforeinstallprompt', function (event) {
+  // Don't display the standard one
+  event.preventDefault();
+
+  // Save the event to use it later
+  window.promptEvent = event;
+});
