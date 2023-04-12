@@ -224,8 +224,8 @@ function Home() {
           <Banner>
             <Top>
               <SiteInfo>
-                <SiteName>{'Homepost'}</SiteName>
-                <SiteAddress>{'homepostapp.com'}</SiteAddress>
+                <SiteName>{'Rolo'}</SiteName>
+                <SiteAddress>{'rolo-client.vercel.app'}</SiteAddress>
               </SiteInfo>
               <CloseButton onClick={handleAndroidCloseClick}>{'Close'}</CloseButton>
             </Top>
@@ -241,8 +241,8 @@ function Home() {
               <CloseButton onClick={handleIOSCloseClick} style={{ top: '0px', right: '0px ' }}>
                 {'Close'}
               </CloseButton>
-              <p>{'Install HomePost'}</p>
-              <p>{'Install this app to your home screen so you can easily stay updated with your community'}</p>
+              <p>{'Install Rolo'}</p>
+              <p>{'Install this app to your home screen so you can keep your industry friends close at hand'}</p>
               <p>
                 {'Just tap'}
                 {' the iOS share icon '}
