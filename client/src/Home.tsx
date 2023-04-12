@@ -66,7 +66,7 @@ const Banner = styled.div`
   box-shadow: 0 -4px 4px rgb(0 0 0 / 4%);
   border-top: 1px solid #cecece;
   position: fixed;
-  bottom: 70px;
+  bottom: 0px;
   left: 0;
   z-index: 100;
   padding: 16px;
@@ -76,15 +76,6 @@ const Top = styled.div`
   display: flex;
   flex-direction: row;
   position: relative;
-`;
-
-const ImageWrapper = styled.div`
-  margin-right: 8px;
-
-  img {
-    width: 48px;
-    height: 48px;
-  }
 `;
 
 const SiteInfo = styled.div`
@@ -144,14 +135,6 @@ const IOS = styled.div`
   }
 `;
 
-const ShareIconWrapper = styled.span`
-  img {
-    height: 16px;
-    margin: 0 4px;
-    display: inline;
-  }
-`;
-
 function Home() {
   const [contacts] = useLocalStorage<Contact[]>('contacts', []);
   const [lastBannerDismissDate, setLastBannerDismissDate] = useLocalStorage('lastBannerDismissDate', '');
@@ -167,6 +150,8 @@ function Home() {
 
   const canShowIOSBanner = isIOS() && isSafari();
   const canShowAndroidBanner = isAndroid();
+
+  console.log('can', canShowIOSBanner);
 
   const defaultShowAndroidBannerValue = bannerWindowOkay && canShowAndroidBanner && !isPWA;
   const defaultShowIOSBannerValue = bannerWindowOkay && canShowIOSBanner && !isPWA;
