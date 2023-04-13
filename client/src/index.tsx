@@ -9,7 +9,7 @@ import Layout from 'Layout';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const router = createBrowserRouter([
   {
