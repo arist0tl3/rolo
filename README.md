@@ -1,38 +1,75 @@
-# PWA-Bootstrap
+# Rolo - Personal Contact Manager
 
-Welcome to the monorepo for PWA-Bootstrap!
+A simple, fast PWA for remembering people I meet while traveling and working remotely.
 
-## Installing
+🔗 **Live at [rolo.ninja](https://rolo.ninja)**
 
-Pull this repo down onto your local machine. You will want to `npm install` the dependencies in both the `client` and `server` folders.
+## The Problem
 
-### Mongo
+I travel 2-3 months/year for work and meet tons of people - at conferences, coworking spaces, coffee shops. My phone's contacts app is too slow and cluttered for quick capture. I needed something lightweight that works offline and focuses on context: *where* I met someone and *what* we talked about.
 
-Data is backed by MongoDB, so make sure you have that installed and running on your 27017 port locally
+## The Solution
 
-### Environment
+Built a dead-simple Progressive Web App that prioritizes speed and offline-first functionality. Add a contact in seconds, search instantly, works without internet.
 
-There are sample environment files. Simply copy the content into new files with the same name (with the `.sample` extension removed).
+## Features
 
-Both Heroku and Vercel support adding secrets via their CLI.
+- **Quick Capture**: Name, location, notes - that's it. No friction.
+- **Offline-First**: PWA means it works without service (crucial when traveling)
+- **Fast Search**: Find people by name, where you met, or conversation topics
+- **Clean UI**: No clutter, just the essentials
+- **Syncs Across Devices**: MongoDB backend keeps everything in sync
 
-### Running
+## Tech Stack
 
-After you have installed the deps and mongo, you can use the following commands to run the app locally:
+**Frontend:**
+- React + TypeScript
+- PWA (service workers, offline support)
+- GraphQL client (Apollo)
 
-- client: `npm start`
-- server: `npm run start-dev`
+**Backend:**
+- Node.js + Express
+- GraphQL API (type-safe)
+- MongoDB
 
-This should spin up the backend on localhost:4000 and the frontend on localhost:3000
+**DX:**
+- Full type safety via GraphQL Code Generator
+- Monorepo structure
+- Hot reload in development
 
-## Developing
+## Architecture
 
-The client is built using create-react-app, so you should easily be able to see your changes via hot reload.
+The app uses GraphQL to maintain type safety end-to-end. When the schema changes, types are automatically generated for both client and server, preventing runtime errors and enabling great autocomplete.
 
-The server is graphql on top of express. Most debugging can be done via a schema explorer like https://studio.apollographql.com/sandbox/explorer
+Client queries are defined in `.graphql` files, which generate React hooks for data fetching. It's a nice DX for a simple app.
 
-You will note that there are `generated.ts` files in both the client and server. These are automatically generated when the server files change, and provide type safety and automatic hooks generation for easy data fetching on the client.
+## Local Development
+```bash
+# Install dependencies
+cd client && npm install
+cd ../server && npm install
 
-If you add or change the `*.graphql` files in the client, you will want to run `npm run generate` to make sure that the client-side `generated.ts` reflects those changes.
+# Start MongoDB locally (port 27017)
 
-_Note_: VSCode (and other IDEs I'd assume) can get confused when `generated.ts` files are changing behind the scenes. Types will get seemingly out of sync. I suggest either keeping the `generated.ts` files open, or opening them ad-hoc when you think the types might be out of sync.
+# Copy .env.sample files and configure
+# See repo for details
+
+# Run
+cd client && npm start      # localhost:3000
+cd server && npm run start-dev  # localhost:4000
+```
+
+## Why I Built This
+
+Started as a weekend project to solve my own problem. Kept iterating on it because I actually use it daily. It's taught me that the best tools are often the simplest ones - just solve the core problem well.
+
+Also wanted to experiment with PWA capabilities and GraphQL type generation in a real app I'd actually use long-term.
+
+## Status
+
+✅ Live and actively used  
+Built over a few weekends in 2024, ongoing minor improvements as I find rough edges while traveling.
+
+---
+
+Built by [@arist0tl3](https://github.com/arist0tl3)
