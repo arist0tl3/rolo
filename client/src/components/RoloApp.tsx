@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PlacesAutocomplete from './PlacesAutocomplete';
 
 type Shift = 'morning' | 'afternoon' | 'evening';
@@ -224,14 +224,16 @@ function ContactDetail({
   onBack,
   onEdit,
   isClosing,
+  containerRef,
 }: {
   contact: Contact;
   onBack: () => void;
   onEdit: () => void;
   isClosing: boolean;
+  containerRef?: React.RefObject<HTMLDivElement>;
 }) {
   return (
-    <div className={`rolo-overlay ${isClosing ? 'closing' : ''}`}>
+    <div ref={containerRef} className={`rolo-overlay ${isClosing ? 'closing' : ''}`}>
       <div className="rolo-detail-card">
         <div className="card-lines" aria-hidden />
         <div className="relative z-10 space-y-5 p-5">
@@ -319,11 +321,13 @@ function ContactForm({
   onSave,
   onCancel,
   isClosing,
+  containerRef,
 }: {
   contact?: Contact | null;
   onSave: (contact: Contact) => void;
   onCancel: () => void;
   isClosing: boolean;
+  containerRef?: React.RefObject<HTMLDivElement>;
 }) {
   const [form, setForm] = useState<ContactFormState>({
     firstName: contact?.firstName || '',
@@ -377,7 +381,7 @@ function ContactForm({
   };
 
   return (
-    <div className={`rolo-overlay ${isClosing ? 'closing' : ''}`}>
+    <div ref={containerRef} className={`rolo-overlay ${isClosing ? 'closing' : ''}`}>
       <div className="rolo-detail-card">
         <div className="card-lines" aria-hidden />
         <div className="relative z-10 space-y-6 p-5">
@@ -533,6 +537,10 @@ export default function RoloApp() {
   const [pwaPrompt, setPwaPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [pwaDismissed, setPwaDismissed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const listScrollTopRef = useRef(0);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -660,11 +668,13 @@ export default function RoloApp() {
   }, [filteredContacts, listMode]);
 
   const handleContactClick = (contact: Contact) => {
+    listScrollTopRef.current = listRef.current?.scrollTop || 0;
     setSelectedContact(contact);
     setViewMode('detail');
   };
 
   const handleAddNew = () => {
+    listScrollTopRef.current = listRef.current?.scrollTop || 0;
     setButtonPressed(true);
     setTimeout(() => {
       setButtonPressed(false);
@@ -697,6 +707,9 @@ export default function RoloApp() {
       setIsClosingDetail(false);
       setViewMode('list');
       setSelectedContact(null);
+      if (listRef.current) {
+        listRef.current.scrollTop = listScrollTopRef.current;
+      }
     }, 200);
   };
 
@@ -708,6 +721,9 @@ export default function RoloApp() {
         setViewMode('detail');
       } else {
         setViewMode('list');
+        if (listRef.current) {
+          listRef.current.scrollTop = listScrollTopRef.current;
+        }
       }
       setEditingContact(null);
     }, 200);
@@ -741,8 +757,17 @@ export default function RoloApp() {
   const showTabs = !searchTerm;
   const showPwaBanner = isMobile && pwaPrompt && !pwaDismissed;
 
+  useEffect(() => {
+    if (viewMode === 'detail') {
+      detailRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    }
+    if (viewMode === 'form') {
+      formRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [viewMode, selectedContact, editingContact]);
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,#5a5a5a_0%,#2b2b2b_45%,#1a1a1a_100%)] px-0 py-0 text-[#2c2c2c] sm:px-4 sm:py-6">
+    <div className="rolo-root min-h-screen bg-[radial-gradient(circle_at_top,#5a5a5a_0%,#2b2b2b_45%,#1a1a1a_100%)] px-0 py-0 text-[#2c2c2c] sm:px-4 sm:py-6">
       <div className="rolo-shell">
         <header className="rolo-header">
           <span className="font-rolodex text-[28px] tracking-[3px] text-[#e8e4dc] drop-shadow-[2px_2px_0_#222]">
@@ -820,7 +845,7 @@ export default function RoloApp() {
           </div>
         ) : null}
 
-        <div className="cards-area">
+        <div ref={listRef} className="cards-area">
           {filteredContacts.length === 0 ? (
             <div className="empty-state">
               {searchTerm ? (
@@ -881,11 +906,23 @@ export default function RoloApp() {
         ) : null}
 
         {(viewMode === 'detail' || isClosingDetail) && selectedContact ? (
-          <ContactDetail contact={selectedContact} onBack={handleBack} onEdit={handleEdit} isClosing={isClosingDetail} />
+          <ContactDetail
+            contact={selectedContact}
+            onBack={handleBack}
+            onEdit={handleEdit}
+            isClosing={isClosingDetail}
+            containerRef={detailRef}
+          />
         ) : null}
 
         {(viewMode === 'form' || isClosingForm) && (
-          <ContactForm contact={editingContact} onSave={handleSave} onCancel={handleCancelForm} isClosing={isClosingForm} />
+          <ContactForm
+            contact={editingContact}
+            onSave={handleSave}
+            onCancel={handleCancelForm}
+            isClosing={isClosingForm}
+            containerRef={formRef}
+          />
         )}
       </div>
     </div>
