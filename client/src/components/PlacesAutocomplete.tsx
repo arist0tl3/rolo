@@ -76,9 +76,8 @@ export default function PlacesAutocomplete({ value, onInput, onSelect, placehold
         placeholder={placeholder}
         aria-autocomplete="list"
         autoComplete="off"
-        disabled={!ready && !value}
       />
-      {status === 'OK' ? (
+      {ready && status === 'OK' ? (
         <ul className="absolute left-0 top-[68px] z-20 w-full overflow-hidden rounded-[8px] border border-[#5b7c99] bg-[#fffef8] text-left shadow-[0_6px_16px_rgba(0,0,0,0.18)]">
           {data.map((suggestion) => {
             const {
